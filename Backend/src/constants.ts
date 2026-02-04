@@ -1,11 +1,7 @@
 export const DB_NAME: string = "taskFlow";
 export const LIMIT: string = "16kb";
-
-interface opt {
-    httpOnly: boolean;
-    secure: boolean;
-}
-export const OPTIONS: opt = {
+export const OPTIONS = {
     httpOnly: true,
     secure: true,
+    sameSite: "none" as const,
 };
