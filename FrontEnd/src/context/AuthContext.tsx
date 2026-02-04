@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from "react";
-import api from "../api/axiosClient";
+import { createContext, useContext, useEffect, useState } from "react";
+import { getMeApi, logoutApi } from "../api/authApi";
 
 type User = {
   _id: string;
@@ -12,6 +12,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
+  loading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,14 +20,34 @@ const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   setUser: () => {},
   logout: async () => {},
+  loading: true,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    restoreSession();
+  }, []);
+
+  const restoreSession = async () => {
+    try {
+      const me = await getMeApi();
+      setUser(me);
+    } catch {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const logout = async () => {
-    await api.post("/users/logout");
-    setUser(null);
+    try {
+      await logoutApi();
+    } finally {
+      setUser(null);
+    }
   };
 
   return (
@@ -36,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated: !!user,
         setUser,
         logout,
+        loading,
       }}
     >
       {children}
