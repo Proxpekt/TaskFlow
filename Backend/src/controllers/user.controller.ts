@@ -121,16 +121,22 @@ const logout = asyncHandler(async (req: Request, res: Response) => {
     );
 
     return res
-    .status(200)
-    .clearCookie("accessToken", OPTIONS)
-    .clearCookie("refreshToken", OPTIONS)
-    .json(new ApiResponse(200, {}, "User Logged Out Successfully!"));
+        .status(200)
+        .clearCookie("accessToken", OPTIONS)
+        .clearCookie("refreshToken", OPTIONS)
+        .json(new ApiResponse(200, {}, "User Logged Out Successfully!"));
 });
 
-// const getCurrentUser = asyncHandler(async (req:Request, res:Response) => {})
+const getCurrentUser = asyncHandler(async (req: Request, res: Response) => {
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, req.user, "Fetched current user successfully")
+        );
+});
 
 // const updateUser = asyncHandler(async (req:Request, res:Response) => {})
 
 // const refreshAccessToken = asyncHandler(async (req:Request, res:Response) => {})
 
-export { registerUser, login, logout };
+export { registerUser, login, logout, getCurrentUser };
