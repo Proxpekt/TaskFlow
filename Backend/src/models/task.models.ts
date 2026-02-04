@@ -3,7 +3,7 @@ import type { Document, Model } from "mongoose";
 
 export interface ITask extends Document {
     title: string;
-    description: string;
+    description?: string;
     completed: boolean;
     owner: mongoose.Types.ObjectId;
 }
@@ -24,6 +24,7 @@ const taskSchema = new Schema<ITask>(
         owner: {
             type: Schema.Types.ObjectId,
             ref: "User",
+            required: true
         },
     },
     { timestamps: true }
