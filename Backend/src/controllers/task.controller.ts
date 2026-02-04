@@ -81,4 +81,43 @@ const deleteTask = asyncHandler(async (req: Request, res: Response) => {
         .json(new ApiResponse(200, {}, "Deleted task successfully!"));
 });
 
-export { getAllTasks, createTask, updateTask, deleteTask };
+const toggleTaskCompletion = asyncHandler(
+    async (req: Request, res: Response) => {
+        const task = await Task.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                owner: req.user!._id,
+            },
+            [
+                {
+                    $set: {
+                        completed: { $not: "$completed" },
+                    },
+                },
+            ],
+            { new: true }
+        );
+
+        if (!task) {
+            throw new ApiError(404, "Task not found");
+        }
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    task,
+                    `Task marked as ${task.completed ? "completed" : "incomplete"}`
+                )
+            );
+    }
+);
+
+export {
+    getAllTasks,
+    createTask,
+    updateTask,
+    deleteTask,
+    toggleTaskCompletion,
+};
