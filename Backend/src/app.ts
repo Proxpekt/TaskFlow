@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { LIMIT } from "./constants";
+// Import Routes
+import userRouter from "./routes/user.route";
 
 const app = express();
 
@@ -26,5 +28,8 @@ app.use(
 );
 
 app.use(cookieParser());
+
+// Declaring routes
+app.use("/api/v1/users", userRouter);
 
 export default app;

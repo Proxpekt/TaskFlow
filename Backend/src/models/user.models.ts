@@ -9,6 +9,7 @@ export interface IUser extends Document {
     email: string;
     fullname: string;
     password: string;
+    refreshToken?: string;
 
     isPasswordCorrect(password: string): Promise<boolean>;
     generateAccessToken(): string;
@@ -42,6 +43,9 @@ const userSchema = new Schema<IUser>(
             type: String,
             required: [true, "Password is required"],
         },
+        refreshToken: {
+            type: String
+        }
     },
     { timestamps: true }
 );
